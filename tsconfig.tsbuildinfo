@@ -1,0 +1,1 @@
+{"root":["./src/ai.ts","./src/db.ts","./src/main.tsx","./src/recorder.ts","./src/storage.ts","./src/types.ts","./src/vtt.ts","./src/components/AiProviderForm.tsx","./src/pages/Library.tsx","./src/pages/Playback.tsx","./src/pages/Record.tsx","./src/pages/Settings.tsx"],"version":"5.9.3"}
