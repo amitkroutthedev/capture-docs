@@ -46,10 +46,10 @@ export function Record() {
 
   const supported = browserSupported();
 
-  // Webcam self-view during setup. Stopped before recording starts — both to
+ // Webcam self-view during setup. Stopped before recording starts — both to
   // free the device for the capture session and to avoid an infinite mirror
   // when the user records this app's own tab.
- /* useEffect(() => {
+  useEffect(() => {
     if (!webcam || phase !== "setup") {
       previewStreamRef.current?.getTracks().forEach((t) => t.stop());
       previewStreamRef.current = null;
@@ -79,8 +79,8 @@ export function Record() {
       previewStreamRef.current?.getTracks().forEach((t) => t.stop());
       previewStreamRef.current = null;
     };
-  }, [webcam, deviceId, phase]);*/
-
+  }, [webcam, deviceId, phase]);
+  
    useEffect(() => {
     if (previewRef.current && previewStreamRef.current) {
       previewRef.current.srcObject = previewStreamRef.current;
