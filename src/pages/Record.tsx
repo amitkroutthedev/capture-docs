@@ -49,7 +49,7 @@ export function Record() {
   // Webcam self-view during setup. Stopped before recording starts — both to
   // free the device for the capture session and to avoid an infinite mirror
   // when the user records this app's own tab.
-  useEffect(() => {
+ /* useEffect(() => {
     if (!webcam || phase !== "setup") {
       previewStreamRef.current?.getTracks().forEach((t) => t.stop());
       previewStreamRef.current = null;
@@ -79,7 +79,13 @@ export function Record() {
       previewStreamRef.current?.getTracks().forEach((t) => t.stop());
       previewStreamRef.current = null;
     };
-  }, [webcam, deviceId, phase]);
+  }, [webcam, deviceId, phase]);*/
+
+   useEffect(() => {
+    if (previewRef.current && previewStreamRef.current) {
+      previewRef.current.srcObject = previewStreamRef.current;
+    }
+  }, [position, webcam, phase]);
 
   // Don't leave a live session behind if the component unmounts mid-recording.
   useEffect(() => () => sessionRef.current?.abort(), []);
@@ -282,61 +288,81 @@ export function Record() {
           </span>
         </label>
 
-        {webcam && (
+       {webcam && (
           <div style={{ paddingLeft: 26 }}>
-            <div className="row" style={{ alignItems: "flex-start", marginBottom: 12 }}>
-              <video ref={previewRef} className="selfview" autoPlay muted playsInline />
-              <div style={{ flex: 1, minWidth: 200 }}>
-                {devices.length > 0 && (
-                  <div className="field">
-                    <label htmlFor="cam">Camera</label>
-                    <select
-                      id="cam"
-                      value={deviceId}
-                      onChange={(e) => setDeviceId(e.target.value)}
-                    >
-                      <option value="">Default camera</option>
-                      {devices.map((d) => (
-                        <option key={d.deviceId} value={d.deviceId}>
-                          {d.label || "Camera"}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-                <div className="field">
-                  <label htmlFor="pos">Bubble position</label>
-                  <select
-                    id="pos"
-                    value={position}
-                    onChange={(e) => setPosition(e.target.value as WebcamPosition)}
+            {devices.length > 0 && (
+              <div className="field">
+                <label htmlFor="cam">Camera</label>
+                <select
+                  id="cam"
+                  value={deviceId}
+                  onChange={(e) => setDeviceId(e.target.value)}
+                >
+                  <option value="">Default camera</option>
+                  {devices.map((d) => (
+                    <option key={d.deviceId} value={d.deviceId}>
+                      {d.label || "Camera"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <div className="field">
+              <label>Bubble placement — tap a corner</label>
+              <div className="placement-frame" role="group" aria-label="Bubble position">
+                <span className="placement-hint mono">your screen</span>
+                {POSITIONS.map((p) => (
+                  <button
+                    key={p.value}
+                    type="button"
+                    className={`placement-corner ${p.value}${
+                      position === p.value ? " active" : ""
+                    }`}
+                    aria-label={p.label}
+                    aria-pressed={position === p.value}
+                    onClick={() => setPosition(p.value)}
                   >
-                    {POSITIONS.map((p) => (
-                      <option key={p.value} value={p.value}>
-                        {p.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="field" style={{ marginBottom: 0 }}>
-                  <label>Bubble shape</label>
-                  <div className="shape-grid">
-                    <button
-                      aria-pressed={shape === "circle"}
-                      onClick={() => setShape("circle")}
-                    >
-                      Circle
-                    </button>
-                    <button
-                      aria-pressed={shape === "rounded"}
-                      onClick={() => setShape("rounded")}
-                    >
-                      Rounded
-                    </button>
-                  </div>
-                </div>
+                    {position === p.value ? (
+                      <video
+                        ref={previewRef}
+                        className={`placement-bubble ${shape}`}
+                        autoPlay
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <span className={`placement-dot ${shape}`} />
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
+
+            <div className="field" style={{ marginBottom: 0 }}>
+              <label>Bubble shape</label>
+              <div className="shape-grid">
+                <button
+                  type="button"
+                  aria-pressed={shape === "circle"}
+                  onClick={() => setShape("circle")}
+                >
+                  Circle
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={shape === "rounded"}
+                  onClick={() => setShape("rounded")}
+                >
+                  Rounded
+                </button>
+              </div>
+            </div>
+            <p className="hint" style={{ margin: "8px 0 0" }}>
+              Preview assumes a 16:9 screen — exact framing depends on the
+              surface you pick when recording starts. You can also change
+              position and shape later on the playback page.
+            </p>
           </div>
         )}
 

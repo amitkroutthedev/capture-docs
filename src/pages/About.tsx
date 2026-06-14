@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ApiKeyGuide } from "../components/ApiKeyGuide";
 
 export function About() {
   return (
@@ -8,8 +9,8 @@ export function About() {
 
       <div className="panel">
         <p style={{ marginTop: 0 }}>
-          CaptureDocs records any tab, window, or screen — with mic, system
-          audio, and an optional webcam bubble — then turns it into something
+          CaptureDocs records any tab, window, or screen, with mic, system
+          audio, and an optional webcam bubble, then turns it into something
           you can read: editable AI subtitles, a searchable click-to-seek
           transcript, and auto-generated chapters with a short summary.
         </p>
@@ -50,7 +51,7 @@ export function About() {
         <span className="eyebrow">Best in Chromium</span>
         <p style={{ marginTop: 6, marginBottom: 0 }}>
           CaptureDocs relies on the browser's screen-capture and recording APIs,
-          which are most complete in Chromium browsers — Chrome, Edge, Brave,
+          which are most complete in Chromium browsers like Chrome, Edge, Brave,
           Arc. Safari and Firefox support them only partially, so recording
           there is unreliable; the app says so up front rather than failing
           halfway. Playback works everywhere.
@@ -60,6 +61,7 @@ export function About() {
       <p className="hint" style={{ marginTop: 14 }}>
         Manage providers and keys in <Link to="/settings">Settings</Link>.
       </p>
+       <ApiKeyGuide />
     </div>
   );
 }
